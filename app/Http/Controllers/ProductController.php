@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Product;
 use Illuminate\Support\Facades\File;
-
 class ProductController extends Controller
 {
     /**
@@ -16,8 +15,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
-        return view('product.index')->with('products',$products);
+         $products = Product::all();
+        return view('product.index')->with('products', $products);
     }
 
     /**

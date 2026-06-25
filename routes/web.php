@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\ProjectController;
 
 
 
@@ -65,6 +66,8 @@ Route::put("/category/{categoryId}", [CategoryController::class, 'update'])->nam
 Route::delete("/category/{categoryId}", [CategoryController::class, 'destroy'])->name('category.delete');
 Route::get('/category/{cateId}', [CategoryController::class, 'show'])->name("category.show");
 
+//Route::resource('/product',ProductController::class);
+
 Route::get('/product',[ProductController::class,'index'])->name('product.index');
 Route::get('/product/create',[ProductController::class,'create'])->name('product.create');
 Route::post('/product',[ProductController::class,'store'])->name('product.store');
@@ -72,6 +75,13 @@ Route::get('/product/{product}',[ProductController::class,'show'])->name('produc
 Route::delete('/product/{product}',[ProductController::class,'destroy'])->name('product.destroy');
 Route::get('/product/{product}/edit',[ProductController::class,'edit'])->name('product.edit');
 Route::put('/product/{product}',[ProductController::class,'update'])->name('product.update');
+
+// Using a Controller (Recommended)
+Route::get('/categories/{categoryId}/projects/{projectId}', [ProjectController::class, 'show'])->name('projects.show');
+
+// Using a Closure Callback
+Route::get('/users/{id}/{name}', function (string $id, string $name) {
+    return 'User ID: ' . $id . ', Name: ' . $name;});
 
 Route::get('/',[FrontendController::class,'index']);
 Route::get('/list',[FrontendController::class,'list']);
