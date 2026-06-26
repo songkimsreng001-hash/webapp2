@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\BookController;
 
 
 
@@ -75,6 +76,18 @@ Route::get('/product/{product}',[ProductController::class,'show'])->name('produc
 Route::delete('/product/{product}',[ProductController::class,'destroy'])->name('product.destroy');
 Route::get('/product/{product}/edit',[ProductController::class,'edit'])->name('product.edit');
 Route::put('/product/{product}',[ProductController::class,'update'])->name('product.update');
+
+
+//Route::resource('/book',BookController::class);
+
+Route::get('/book',[BookController::class,'index'])->name('book.index');
+Route::get('/book/create',[BookController::class,'create'])->name('book.create');
+Route::post('/book',[BookController::class,'store'])->name('book.store');
+Route::get('/book/{book}',[BookController::class,'show'])->name('book.show');
+Route::delete('/book/{book}',[BookController::class,'destroy'])->name('book.destroy');
+Route::get('/book/{book}/edit',[BookController::class,'edit'])->name('book.edit');
+Route::put('/book/{book}',[BookController::class,'update'])->name('book.update');
+
 
 // Using a Controller (Recommended)
 Route::get('/categories/{categoryId}/projects/{projectId}', [ProjectController::class, 'show'])->name('projects.show');
