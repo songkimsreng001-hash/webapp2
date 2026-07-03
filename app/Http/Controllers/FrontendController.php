@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 
 class FrontendController extends Controller
 {
@@ -71,4 +72,28 @@ class FrontendController extends Controller
     {
         //
     }
+    public function getBySearch(Request $request)
+    {
+        $keyword = !empty($request->input('keyword')) ? $request->input('keyword') : "";
+        if ($keyword != "") {
+            return view('frontend.search')
+                ->with('products', Product::where('name', 'LIKE', '%' . $keyword . '%')->paginate(2))
+                ->with('keyword', $keyword);
+        } else {
+            return view('frontend.search')
+                ->with('products', Product::paginate(2))
+                ->with('keyword', $keyword);
+        }
+    }
+    public function getByCategory($id=0) {
+        $categories = Category::all();
+        if (!$id) {
+            $id = $categories->first()->id;
+        }
+        $products = DB::table('products')->where('category_id', $id)->paginate(3);
+        return view('frontend.category')
+            ->with('products', $products)
+            ->with('categories', $categories);
+    }
 }
+  

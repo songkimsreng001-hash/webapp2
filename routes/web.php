@@ -6,8 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\BookController;
-
-
+use App\Http\Controllers\AuthController;
 
 
 Route::get('/', function () {
@@ -99,3 +98,15 @@ Route::get('/users/{id}/{name}', function (string $id, string $name) {
 Route::get('/',[FrontendController::class,'index']);
 Route::get('/list',[FrontendController::class,'list']);
 Route::get('/show/{id}',[FrontendController::class,'show']);
+
+Route::get('/search', [FrontendController::class,'getBySearch']);
+Route::get('/frontend/{category?}', [FrontendController::class,'getByCategory']);
+
+// login and register
+Route::get('/login', [AuthController::class, 'index'])->name('login');
+Route::post('/post-login', [AuthController::class, 'postLogin'])->name('login.post');
+Route::get('/registration', [AuthController::class, 'registration'])->name('register');
+Route::post('/post-registration', [AuthController::class, 'postRegistration'])->name('register.post');
+Route::get('/dashboard', [AuthController::class, 'dashboard']);
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
