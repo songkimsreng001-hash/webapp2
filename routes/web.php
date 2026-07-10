@@ -7,6 +7,8 @@ use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChangePasswordController;
+use App\Http\Controllers\UpdateProfileController;
 
 
 Route::get('/', function () {
@@ -110,3 +112,10 @@ Route::post('/post-registration', [AuthController::class, 'postRegistration'])->
 Route::get('/dashboard', [AuthController::class, 'dashboard']);
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// change password
+Route::get('/change-password', [ChangePasswordController::class, 'index'])->name('form.password');
+Route::post('/change-password', [ChangePasswordController::class, 'store'])->name('change.password');
+
+// update profile
+Route::get('/update-profile/{user}',  [UpdateProfileController::class, 'editProfile'])->name('profile.edit');
+Route::patch('/update-profile/{user}',  [UpdateProfileController::class, 'updateProfile'])->name('profile.update');

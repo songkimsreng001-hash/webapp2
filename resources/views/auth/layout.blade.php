@@ -82,8 +82,8 @@
                         </a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="{!! url('/dashboard') !!}">Profile</a>
-                            <a class="dropdown-item" href="{{--route('profile.edit',$user)--}}">Update profile</a>
-                            <a class="dropdown-item" href="{{--route('form.password')--}}">Change password</a>
+                            <a class="dropdown-item" href="{{ route('profile.edit', $user) }}">Update profile</a>
+                            <a class="dropdown-item" href="{{ route('form.password') }}">Change password</a>
                         </div>
                     </li>
                     @endguest

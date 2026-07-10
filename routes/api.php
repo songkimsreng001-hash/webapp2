@@ -3,7 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PostController;
-
 use App\Http\Controllers\Api\AuthController;
 
 Route::get('/user', function (Request $request) {
@@ -15,15 +14,15 @@ Route::get('/user', function () {
 });
 
 
-Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
-Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
-Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
-Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+Route::get('/postsapi', [PostController::class, 'index'])->name('posts.index');
+Route::post('/postsapi', [PostController::class, 'store'])->name('posts.store');
+Route::get('/postsapi/{post}', [PostController::class, 'show'])->name('posts.show');
+Route::put('/postsapi/{post}', [PostController::class, 'update'])->name('posts.update');
+Route::delete('/postsapi/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/registerapi', [AuthController::class, 'register']);
+Route::post('/loginapi', [AuthController::class, 'login'])->name('login');
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/dashboard', [AuthController::class, 'dashboard']);
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/dashboardapi', [AuthController::class, 'dashboard']);
+    Route::post('/logoutapi', [AuthController::class, 'logout'])->name('logout');
 });
