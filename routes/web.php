@@ -11,6 +11,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\UpdateProfileController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\StoreController;
+use App\Http\Controllers\OrderController;
 
 
 Route::get('/', function () {
@@ -132,3 +134,18 @@ Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPass
 // contact us form
 Route::get('/contact', [ContactUsFormController::class, 'createForm']);
 Route::post('/contact', [ContactUsFormController::class, 'ContactUsForm'])->name('contact.store');
+
+
+// cart
+Route::get('/cart', [StoreController::class, 'cart'])->name('cart');
+Route::get('/add-to-cart/{id}', [StoreController::class, 'addToCart'])->name('add.to.cart');
+Route::patch('/update-cart', [StoreController::class, 'update'])->name('update.cart');
+Route::delete('/remove-from-cart', [StoreController::class, 'remove'])->name('remove.from.cart');
+
+// checkout
+Route::get('/checkout', [StoreController::class, 'checkout'])->name('cart.checkout');
+
+// order
+Route::get('/orders', [OrderController::class, 'index'])->name('admin.order');
+Route::post('/orders/approve/{id}', [OrderController::class, 'approve'])->name('admin.approve');
+Route::post('/orders/reject/{id}', [OrderController::class, 'reject'])->name('admin.reject');
