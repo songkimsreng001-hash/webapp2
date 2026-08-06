@@ -16,13 +16,12 @@
                 <a href="{{url('/show/'.$product->id)}}">
                     <img src="img/{{$product->image}}" width="200px" alt="">
                 </a>
-                <a href="{{ route('add.to.cart', $product->id) }}" 
-                class="btn btn-warning btn-block text-center" role="button">Add to cart</a>
                 <div class="caption">
                     <h4>{{ $product->name }}</h4>
                     <p>{{ $product->description }}</p>
                     <p><strong>Price: </strong> {{ $product->price }}$</p>
-                    <p class="btn-holder"><a href="{{-- route('add.to.cart', $product->id) --}}" class="btn btn-warning btn-block text-center" role="button">Add to cart</a> </p>
+                    <a href="{{ route('add.to.cart', $product->id) }}" 
+                    class="btn btn-warning btn-block text-center" role="button">Add to cart</a>
                 </div>
             </div>
         </div>

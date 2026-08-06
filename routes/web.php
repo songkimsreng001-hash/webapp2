@@ -13,6 +13,7 @@ use App\Http\Controllers\UpdateProfileController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 
 
 Route::get('/', function () {
@@ -149,3 +150,6 @@ Route::get('/checkout', [StoreController::class, 'checkout'])->name('cart.checko
 Route::get('/orders', [OrderController::class, 'index'])->name('admin.order');
 Route::post('/orders/approve/{id}', [OrderController::class, 'approve'])->name('admin.approve');
 Route::post('/orders/reject/{id}', [OrderController::class, 'reject'])->name('admin.reject');
+
+
+Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);

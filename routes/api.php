@@ -2,27 +2,55 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\PaymentController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+/*
+|--------------------------------------------------------------------------
+| API Routes  (prefix: /api)
+|--------------------------------------------------------------------------
+|
+| FIX: Removed the duplicate /user route that caused a conflict.
+| FIX: All protected routes now use auth:sanctum middleware.
+| NEW: Added products, categories, orders, payment, profile, change-password.
+|
+*/
 
-Route::get('/user', function () {
-    return ['name' => 'John', 'email' => 'john@example.com'];
-});
+// ─── Public routes ──────────────────────────────────────────────────────────
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login',    [AuthController::class, 'login'])->name('api.login');
 
+// Public product browsing (no login needed)
+Route::get('/products',              [ProductController::class, 'index']);
+Route::get('/products/{id}',         [ProductController::class, 'show']);
+Route::get('/categories',            [ProductController::class, 'categories']);
 
-Route::get('/postsapi', [PostController::class, 'index'])->name('posts.index');
-Route::post('/postsapi', [PostController::class, 'store'])->name('posts.store');
-Route::get('/postsapi/{post}', [PostController::class, 'show'])->name('posts.show');
-Route::put('/postsapi/{post}', [PostController::class, 'update'])->name('posts.update');
-Route::delete('/postsapi/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+// Public blog posts
+Route::get('/posts',        [PostController::class, 'index']);
+Route::get('/posts/{post}', [PostController::class, 'show']);
 
-Route::post('/registerapi', [AuthController::class, 'register']);
-Route::post('/loginapi', [AuthController::class, 'login'])->name('login');
+// ─── Protected routes (require Bearer token) ────────────────────────────────
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/dashboardapi', [AuthController::class, 'dashboard']);
-    Route::post('/logoutapi', [AuthController::class, 'logout'])->name('logout');
+
+    // Auth
+    Route::get('/me',                [AuthController::class, 'me']);
+    Route::put('/profile',           [AuthController::class, 'updateProfile']);
+    Route::put('/change-password',   [AuthController::class, 'changePassword']);
+    Route::post('/logout',           [AuthController::class, 'logout'])->name('api.logout');
+
+    // Posts (authenticated CRUD)
+    Route::post('/posts',          [PostController::class, 'store']);
+    Route::put('/posts/{post}',    [PostController::class, 'update']);
+    Route::delete('/posts/{post}', [PostController::class, 'destroy']);
+
+    // Orders
+    Route::get('/orders',        [OrderController::class, 'index']);
+    Route::get('/orders/{id}',   [OrderController::class, 'show']);
+    Route::post('/orders',       [OrderController::class, 'store']);
+
+    // Stripe payment — create intent before showing payment sheet
+    Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
 });
