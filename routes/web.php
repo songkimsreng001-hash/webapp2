@@ -19,6 +19,7 @@ use App\Http\Controllers\PaymentController;
 Route::get('/', function () {
     return view('welcome');
 });
+
 Route::get('/about', function () {
     return view('about');
 });
@@ -30,10 +31,6 @@ Route::get('/user/{id}', function ($id) {
 Route::get('/post/{slug}', function ($slug = 'default-post') {
     return "Post Slug: $slug";
 });
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
 
 Route::get('/test', function () {
     $route = route('dashboard');
@@ -53,17 +50,7 @@ Route::middleware(['auth'])->group(function () {
         return 'User Profile';
     });
 });
-Route::get('/login', function () {
-    return 'Login Page';
-})->name('login');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth');
-
-Route::fallback(function () {
-    return response()->view('errors.404', [], 404);
-});
 
 Route::get('/category', [CategoryController::class, 'index'])->name("category.list");
 Route::get('/category/create', [CategoryController::class, 'create'])->name("category.create");
@@ -114,8 +101,8 @@ Route::get('/login', [AuthController::class, 'index'])->name('login');
 Route::post('/post-login', [AuthController::class, 'postLogin'])->name('login.post');
 Route::get('/registration', [AuthController::class, 'registration'])->name('register');
 Route::post('/post-registration', [AuthController::class, 'postRegistration'])->name('register.post');
-Route::get('/dashboard', [AuthController::class, 'dashboard']);
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard')->middleware('auth');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // change password
 Route::get('/change-password', [ChangePasswordController::class, 'index'])->name('form.password');
@@ -153,3 +140,7 @@ Route::post('/orders/reject/{id}', [OrderController::class, 'reject'])->name('ad
 
 
 Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
+
+Route::fallback(function () {
+    return response()->view('errors.404', [], 404);
+});

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
@@ -79,7 +80,12 @@ class AuthController extends Controller
     {
         if (Auth::check()) {
             $user = Auth::user();
-            return view('auth.dashboard')->with('user', $user);
+            $products = Product::orderBy('created_at', 'desc')->take(12)->get();
+
+            return view('auth.dashboard')->with([
+                'user' => $user,
+                'products' => $products,
+            ]);
         }
         return redirect("login")->withErrors('You do not have access!');
     }
