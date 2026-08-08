@@ -14,7 +14,11 @@ class FrontendController extends Controller
      */
     public function index()
     {
-        return view("frontend.index");
+        $categories = Category::all();
+        $products = Product::orderBy('created_at','DESC')->paginate(8);
+        return view('frontend.index')
+            ->with('products', $products)
+            ->with('categories', $categories);
     }
 
      public function list()
@@ -85,15 +89,31 @@ class FrontendController extends Controller
                 ->with('keyword', $keyword);
         }
     }
-    public function getByCategory($id=0) {
+    public function categories()
+    {
         $categories = Category::all();
-        if (!$id) {
-            $id = $categories->first()->id;
+        $products = Product::orderBy('created_at','DESC')->paginate(3);
+
+        return view('frontend.category')
+            ->with('categories', $categories)
+            ->with('products', $products)
+            ->with('selectedCategory', null);
+    }
+
+    public function getByCategory($id)
+    {
+        $categories = Category::all();
+        $selectedCategory = Category::find($id);
+        $products = collect();
+
+        if ($selectedCategory) {
+            $products = Product::where('category_id', $id)->paginate(3);
         }
-        $products = DB::table('products')->where('category_id', $id)->paginate(3);
+
         return view('frontend.category')
             ->with('products', $products)
-            ->with('categories', $categories);
+            ->with('categories', $categories)
+            ->with('selectedCategory', $selectedCategory);
     }
 }
   
