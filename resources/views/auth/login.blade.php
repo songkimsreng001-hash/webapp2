@@ -1,58 +1,64 @@
 @extends('auth.layout')
 
 @section('content')
-    <main class="login-form">
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-lg-5 col-md-7">
-                    <div class="card card-shadow border-0">
-                        <div class="card-header bg-white text-center py-4">
-                            <h4 class="mb-0">Login to your account</h4>
+<div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+        <div class="auth-card">
+            <div class="auth-card-header">
+                <div class="auth-icon"><i class="fas fa-lock"></i></div>
+                <h4>Welcome back</h4>
+                <p>Sign in to your 24/7 NHAM account</p>
+            </div>
+            <div class="auth-card-body">
+                <form action="{{ route('login.post') }}" method="POST">
+                    @csrf
+
+                    <div class="mb-3">
+                        <label for="email_address" class="form-label">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input type="email" id="email_address" class="form-control"
+                                name="email" value="{{ old('email') }}"
+                                placeholder="your@email.com" required autofocus>
                         </div>
-                        <div class="card-body p-4">
-                            <form action="{{ route('login.post') }}" method="POST">
-                                @csrf
-                                <div class="form-group mb-3">
-                                    <label for="email_address" class="form-label">E-Mail Address</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                        </div>
-                                        <input type="email" id="email_address" class="form-control" name="email"
-                                            value="{{ old('email') }}" required autofocus>
-                                    </div>
-                                    @if ($errors->has('email'))
-                                        <span class="text-danger small">{{ $errors->first('email') }}</span>
-                                    @endif
-                                </div>
-
-                                <div class="form-group mb-3">
-                                    <label for="password" class="form-label">Password</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                        </div>
-                                        <input type="password" id="password" class="form-control" name="password" required>
-                                    </div>
-                                    @if ($errors->has('password'))
-                                        <span class="text-danger small">{{ $errors->first('password') }}</span>
-                                    @endif
-                                </div>
-
-                                <div class="form-group form-check mb-3">
-                                    <input type="checkbox" class="form-check-input" id="remember" name="remember" value="1">
-                                    <label class="form-check-label" for="remember">Remember Me</label>
-                                </div>
-
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <a href="{{ route('forget.password.get') }}">Forgot password?</a>
-                                    <button type="submit" class="btn btn-primary px-4">Login</button>
-                                </div>
-                            </form>
-                        </div>
+                        @error('email')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
-                </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" id="password" class="form-control"
+                                name="password" placeholder="••••••••" required>
+                        </div>
+                        @error('password')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="remember"
+                                name="remember" value="1">
+                            <label class="form-check-label" for="remember"
+                                style="font-size:.83rem; color:#64748b">Remember me</label>
+                        </div>
+                        <a href="{{ route('forget.password.get') }}" class="auth-link">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-sign-in-alt me-2"></i> Sign In
+                    </button>
+
+                    <p class="text-center mt-3 mb-0" style="font-size:.83rem; color:#64748b">
+                        Don't have an account?
+                        <a href="{{ route('register') }}" class="auth-link ms-1">Create one</a>
+                    </p>
+                </form>
             </div>
         </div>
-    </main>
+    </div>
+</div>
 @endsection

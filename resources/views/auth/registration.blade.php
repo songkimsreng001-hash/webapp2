@@ -1,78 +1,79 @@
 @extends('auth.layout')
 
 @section('content')
-    <main class="login-form">
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-lg-6 col-md-8">
-                    <div class="card card-shadow border-0">
-                        <div class="card-header bg-white text-center py-4">
-                            <h4 class="mb-0">Create a new account</h4>
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+        <div class="auth-card">
+            <div class="auth-card-header">
+                <div class="auth-icon"><i class="fas fa-user-plus"></i></div>
+                <h4>Create an account</h4>
+                <p>Join 24/7 NHAM today</p>
+            </div>
+            <div class="auth-card-body">
+                <form action="{{ route('register.post') }}" method="POST">
+                    @csrf
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Full Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input type="text" id="name" class="form-control"
+                                name="name" value="{{ old('name') }}"
+                                placeholder="Your full name" required autofocus>
                         </div>
-                        <div class="card-body p-4">
-                            <form action="{{ route('register.post') }}" method="POST">
-                                @csrf
-
-                                <div class="form-group mb-3">
-                                    <label for="name" class="form-label">Name</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                        </div>
-                                        <input type="text" id="name" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
-                                    </div>
-                                    @if ($errors->has('name'))
-                                        <span class="text-danger small">{{ $errors->first('name') }}</span>
-                                    @endif
-                                </div>
-
-                                <div class="form-group mb-3">
-                                    <label for="email_address" class="form-label">E-Mail Address</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                        </div>
-                                        <input type="email" id="email_address" class="form-control" name="email" value="{{ old('email') }}" required>
-                                    </div>
-                                    @if ($errors->has('email'))
-                                        <span class="text-danger small">{{ $errors->first('email') }}</span>
-                                    @endif
-                                </div>
-
-                                <div class="form-group mb-3">
-                                    <label for="password" class="form-label">Password</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                        </div>
-                                        <input type="password" id="password" class="form-control" name="password" required>
-                                    </div>
-                                    @if ($errors->has('password'))
-                                        <span class="text-danger small">{{ $errors->first('password') }}</span>
-                                    @endif
-                                </div>
-
-                                <div class="form-group mb-4">
-                                    <label for="password_confirmation" class="form-label">Confirm Password</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-key"></i></span>
-                                        </div>
-                                        <input type="password" id="password_confirmation" class="form-control" name="password_confirmation" required>
-                                    </div>
-                                    @if ($errors->has('password_confirmation'))
-                                        <span class="text-danger small">{{ $errors->first('password_confirmation') }}</span>
-                                    @endif
-                                </div>
-
-                                <div class="text-end">
-                                    <button type="submit" class="btn btn-primary px-4">Register</button>
-                                </div>
-                            </form>
-                        </div>
+                        @error('name')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
-                </div>
+
+                    <div class="mb-3">
+                        <label for="email_address" class="form-label">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input type="email" id="email_address" class="form-control"
+                                name="email" value="{{ old('email') }}"
+                                placeholder="your@email.com" required>
+                        </div>
+                        @error('email')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" id="password" class="form-control"
+                                name="password" placeholder="Min. 6 characters" required>
+                        </div>
+                        @error('password')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password_confirmation" class="form-label">Confirm Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            <input type="password" id="password_confirmation" class="form-control"
+                                name="password_confirmation" placeholder="Repeat password" required>
+                        </div>
+                        @error('password_confirmation')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-user-plus me-2"></i> Create Account
+                    </button>
+
+                    <p class="text-center mt-3 mb-0" style="font-size:.83rem; color:#64748b">
+                        Already have an account?
+                        <a href="{{ route('login') }}" class="auth-link ms-1">Sign in</a>
+                    </p>
+                </form>
             </div>
         </div>
-    </main>
+    </div>
+</div>
 @endsection
