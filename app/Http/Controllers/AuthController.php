@@ -34,7 +34,13 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials, $remember)) {
-            return redirect()->intended('dashboard')->withSuccess('Welcome back!');
+            $user = Auth::user();
+
+            if ($user->role === 'admin') {
+                return redirect()->intended('/dashboard')->withSuccess('Welcome back!');
+            }
+
+            return redirect()->intended('/')->withSuccess('Welcome back!');
         }
 
         return redirect('login')->withErrors('Invalid email or password.');
@@ -115,6 +121,7 @@ class AuthController extends Controller
             'name'     => $data['name'],
             'email'    => $data['email'],
             'password' => Hash::make($data['password']),
+            'role'     => $data['role'] ?? 'user',
         ]);
     }
 

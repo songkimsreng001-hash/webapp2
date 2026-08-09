@@ -1,45 +1,79 @@
 @extends('layout.frontend')
+@section('page-title', 'Featured Products — 24/7 NHAM')
 
 @section('content')
-<div class="container px-4 px-lg-5 mt-5">
-    <div class="row mb-4">
-        <div class="col-lg-12">
-            <h2 class="fw-bolder">Featured Products</h2>
-            <p class="text-muted">Discover the latest items from our products table.</p>
+
+{{-- Hero --}}
+<div class="hero-strip">
+    <div class="container">
+        <h1>Fresh picks, delivered fast</h1>
+        <p>Discover the latest food, drinks, and more from 24/7 NHAM.</p>
+        <form class="hero-search" action="{{ url('/search') }}" method="GET">
+            <input type="text" name="keyword" placeholder="Search products…" value="{{ old('keyword') }}">
+            <button type="submit"><i class="fas fa-search me-1"></i> Search</button>
+        </form>
+    </div>
+</div>
+
+{{-- Category pills --}}
+@if(isset($categories) && $categories->count())
+<div class="cat-pill-row">
+    <div class="container">
+        <div class="cat-pill-scroll">
+            <a href="{{ url('/list') }}" class="cat-pill active">All</a>
+            @foreach($categories as $cat)
+                <a href="{{ route('frontend.category', $cat->id) }}" class="cat-pill">{{ $cat->name }}</a>
+            @endforeach
         </div>
+    </div>
+</div>
+@endif
+
+{{-- Products grid --}}
+<div class="container">
+    <div class="section-header">
+        <h2>Featured Products</h2>
+        <p>Discover the latest items available in our store.</p>
     </div>
 
     @if($products->isEmpty())
-        <div class="alert alert-info">No products available right now.</div>
+        <div class="empty-state">
+            <i class="fas fa-box-open"></i>
+            <h5>No products yet</h5>
+            <p>Check back soon — new items are on their way.</p>
+        </div>
     @else
-        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+        <div class="row g-4 row-cols-2 row-cols-md-3 row-cols-xl-4">
             @foreach($products as $product)
-                <div class="col mb-5">
-                    <div class="card h-100">
+            <div class="col">
+                <div class="product-card">
+                    <div class="card-img-wrap">
                         @if($product->image)
-                            <img class="card-img-top" src="{{ asset('img/' . $product->image) }}" alt="{{ $product->name }}" />
+                            <img src="{{ asset('img/' . $product->image) }}" alt="{{ $product->name }}">
                         @else
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="{{ $product->name }}" />
+                            <img src="https://dummyimage.com/450x300/dcfce7/166534.jpg&text={{ urlencode($product->name) }}"
+                                 alt="{{ $product->name }}">
                         @endif
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <h5 class="fw-bolder">{{ $product->name }}</h5>
-                                <p class="text-muted small mb-2">{{ \u003CIlluminate\Support\Str::limit($product->description, 70) }}</p>
-                                <span class="text-success fw-bold">${{ number_format($product->price, 2) }}</span>
-                            </div>
-                        </div>
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center d-grid gap-2">
-                                <a class="btn btn-outline-dark mt-auto" href="{{ url('/show/'.$product->id) }}">View</a>
-                                <a class="btn btn-warning mt-auto" href="{{ route('add.to.cart', $product->id) }}">Add to cart</a>
-                            </div>
-                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="product-name">{{ $product->name }}</div>
+                        <div class="product-desc">{{ Str::limit($product->description, 70) }}</div>
+                        <div class="product-price">${{ number_format($product->price, 2) }}</div>
+                    </div>
+                    <div class="card-footer-actions">
+                        <a href="{{ url('/show/' . $product->id) }}" class="btn-view-product">
+                            <i class="fas fa-eye me-1"></i> View
+                        </a>
+                        <a href="{{ route('add.to.cart', $product->id) }}" class="btn-add-cart">
+                            <i class="fas fa-cart-plus me-1"></i> Add to Cart
+                        </a>
                     </div>
                 </div>
+            </div>
             @endforeach
         </div>
 
-        <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center mt-5">
             {{ $products->links('pagination::bootstrap-5') }}
         </div>
     @endif

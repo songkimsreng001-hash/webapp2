@@ -74,11 +74,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/book/{book}/edit',[BookController::class,'edit'])->name('book.edit');
     Route::put('/book/{book}',[BookController::class,'update'])->name('book.update');
 
-    Route::get('/orders', [OrderController::class, 'index'])->name('admin.order');
-    Route::post('/orders/approve/{id}', [OrderController::class, 'approve'])->name('admin.approve');
-    Route::post('/orders/reject/{id}', [OrderController::class, 'reject'])->name('admin.reject');
-
-    Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/orders', [OrderController::class, 'index'])->name('admin.order');
+        Route::post('/orders/approve/{id}', [OrderController::class, 'approve'])->name('admin.approve');
+        Route::post('/orders/reject/{id}', [OrderController::class, 'reject'])->name('admin.reject');
+        Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+    });
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
