@@ -38,7 +38,7 @@
                         {!! $product->description !!}
                     </td>
                     <td>
-                        {{ Html::img('img/'.$product->image, $product->name)->attributes(['style'=>'width:100px;height:100px']) }}
+                        <img src="{{ asset('img/'.$product->image) }}" alt="{{ $product->name }}" style="width:100px;height:100px;object-fit:cover;" />
                     </td>
                     <td>
                         {!! $product->price !!}
@@ -47,9 +47,11 @@
                     <td><a class="btn btn-primary" href="{!! url('product/' . $product->id . '/edit') !!}">Edit</a></td>
 
                     <td>
-                        {{ Html::form('DELETE','product/'. $product->id)->open()}}
-                        <button class="btn btn-danger delete">Delete</button>
-                        {{ Html::form()->close() }}
+                        <form action="{{ route('product.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
                     </td>
                 </tr>
                 @endforeach

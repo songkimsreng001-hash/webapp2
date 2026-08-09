@@ -8,7 +8,7 @@
 
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item">
-            <a href="{{ url('/dashboard') }}">Dashboard</a>
+            <a href="{{ route('dashboard') }}">Dashboard</a>
         </li>
         <li class="breadcrumb-item active">
             Create Book
@@ -40,43 +40,32 @@
                 </div>
             @endif
 
-            {!! Html::form('POST','/book')->open() !!}
+            <form action="{{ route('book.store') }}" method="POST">
+                @csrf
 
-            {{-- Title --}}
-            {!! Html::label('Title:','Title') !!}
-            {!! Html::input('text','Title')
-                ->class('form-control') !!}
-            <br>
+                <div class="mb-3">
+                    <label for="Title" class="form-label">Title:</label>
+                    <input type="text" name="Title" id="Title" class="form-control" value="{{ old('Title') }}" required>
+                </div>
 
-            {{-- Author --}}
-            {!! Html::label('Author:','Author') !!}
-            {!! Html::input('text','Author')
-                ->class('form-control') !!}
-            <br>
+                <div class="mb-3">
+                    <label for="Author" class="form-label">Author:</label>
+                    <input type="text" name="Author" id="Author" class="form-control" value="{{ old('Author') }}" required>
+                </div>
 
-            {{-- ISBN --}}
-            {!! Html::label('ISBN:','ISBN') !!}
-            {!! Html::input('text','ISBN')
-                ->class('form-control') !!}
-            <br>
+                <div class="mb-3">
+                    <label for="ISBN" class="form-label">ISBN:</label>
+                    <input type="text" name="ISBN" id="ISBN" class="form-control" value="{{ old('ISBN') }}" required>
+                </div>
 
-            {{-- Publish Year --}}
-            {!! Html::label('Publish Year:','PublishYear') !!}
-            {!! Html::input('number','PublishYear')
-                ->class('form-control')
-                ->attribute('min','1900')
-                ->attribute('max', date('Y')) !!}
-            <br>
+                <div class="mb-3">
+                    <label for="PublishYear" class="form-label">Publish Year:</label>
+                    <input type="number" name="PublishYear" id="PublishYear" class="form-control" min="1900" max="{{ date('Y') }}" value="{{ old('PublishYear') }}" required>
+                </div>
 
-            {{ Html::submit('Create')
-                ->class('btn btn-primary') }}
-
-            <a class="btn btn-secondary"
-               href="{{ url('/book') }}">
-               Back
-            </a>
-
-            {{ Html::form()->close() }}
+                <button type="submit" class="btn btn-primary">Create</button>
+                <a class="btn btn-secondary" href="{{ route('book.index') }}">Back</a>
+            </form>
 
         </div>
     </div>

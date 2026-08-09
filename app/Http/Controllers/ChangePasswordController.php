@@ -7,19 +7,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Rules\MatchOldPassword;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
-class ChangePasswordController extends Controller implements HasMiddleware
+class ChangePasswordController extends Controller
 {
-    public static function middleware(): array
-    {
-        return [
-            new Middleware('auth'),
-        ];
-    }
     public function __construct()
     {
-        $this->middleware();
+        $this->middleware('auth');
     }
     public function index()
     {

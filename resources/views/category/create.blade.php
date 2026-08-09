@@ -20,14 +20,17 @@
         </ul>
     </div>
     @endif
-    {!! Html::form('POST','/category')->open() !!}
-    {!! Html::label('Name: ','name') !!}
-    {!! Html::input('text','name', '')->class('form-control')  !!}
-    <br>
-    {!! Html::label('Description: ','description') !!}
-    {!! Html::textarea('description', '')->class('form-control') !!}
-    <br>
-    {{ Html::submit('Create')->class('btn btn-primary') }}
-    <a class="btn btn-secondary" href="{{route('category.list')}}">Back</a>
-    {!! Html::form()->close() !!}
+    <form action="{{ route('category.store') }}" method="POST">
+        @csrf
+        <div class="mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description:</label>
+            <textarea name="description" id="description" class="form-control" rows="4" required>{{ old('description') }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+        <a class="btn btn-secondary" href="{{ route('category.list') }}">Back</a>
+    </form>
 @endsection

@@ -16,10 +16,6 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::get('/about', function () {
     return view('about');
 });
@@ -49,37 +45,42 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', function () {
         return 'User Profile';
     });
+
+    Route::get('/category', [CategoryController::class, 'index'])->name("category.list");
+    Route::get('/category/create', [CategoryController::class, 'create'])->name("category.create");
+    Route::post('/category', [CategoryController::class, 'store'])->name("category.store");
+    Route::get("/category/{categoryId}/edit", [CategoryController::class, 'edit'])->name('category.edit');
+    Route::put("/category/{categoryId}", [CategoryController::class, 'update'])->name('category.update');
+    Route::delete("/category/{categoryId}", [CategoryController::class, 'destroy'])->name('category.delete');
+    Route::get('/category/{cateId}', [CategoryController::class, 'show'])->name("category.show");
+
+    //Route::resource('/product',ProductController::class);
+
+    Route::get('/product',[ProductController::class,'index'])->name('product.index');
+    Route::get('/product/create',[ProductController::class,'create'])->name('product.create');
+    Route::post('/product',[ProductController::class,'store'])->name('product.store');
+    Route::get('/product/{product}',[ProductController::class,'show'])->name('product.show');
+    Route::delete('/product/{product}',[ProductController::class,'destroy'])->name('product.destroy');
+    Route::get('/product/{product}/edit',[ProductController::class,'edit'])->name('product.edit');
+    Route::put('/product/{product}',[ProductController::class,'update'])->name('product.update');
+
+    //Route::resource('/book',BookController::class);
+
+    Route::get('/book',[BookController::class,'index'])->name('book.index');
+    Route::get('/book/create',[BookController::class,'create'])->name('book.create');
+    Route::post('/book',[BookController::class,'store'])->name('book.store');
+    Route::get('/book/{book}',[BookController::class,'show'])->name('book.show');
+    Route::delete('/book/{book}',[BookController::class,'destroy'])->name('book.destroy');
+    Route::get('/book/{book}/edit',[BookController::class,'edit'])->name('book.edit');
+    Route::put('/book/{book}',[BookController::class,'update'])->name('book.update');
+
+    Route::get('/orders', [OrderController::class, 'index'])->name('admin.order');
+    Route::post('/orders/approve/{id}', [OrderController::class, 'approve'])->name('admin.approve');
+    Route::post('/orders/reject/{id}', [OrderController::class, 'reject'])->name('admin.reject');
+
+    Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });
-
-
-Route::get('/category', [CategoryController::class, 'index'])->name("category.list");
-Route::get('/category/create', [CategoryController::class, 'create'])->name("category.create");
-Route::post('/category', [CategoryController::class, 'store'])->name("category.store");
-Route::get("/category/{categoryId}/edit", [CategoryController::class, 'edit'])->name('category.edit');
-Route::put("/category/{categoryId}", [CategoryController::class, 'update'])->name('category.update');
-Route::delete("/category/{categoryId}", [CategoryController::class, 'destroy'])->name('category.delete');
-Route::get('/category/{cateId}', [CategoryController::class, 'show'])->name("category.show");
-
-//Route::resource('/product',ProductController::class);
-
-Route::get('/product',[ProductController::class,'index'])->name('product.index');
-Route::get('/product/create',[ProductController::class,'create'])->name('product.create');
-Route::post('/product',[ProductController::class,'store'])->name('product.store');
-Route::get('/product/{product}',[ProductController::class,'show'])->name('product.show');
-Route::delete('/product/{product}',[ProductController::class,'destroy'])->name('product.destroy');
-Route::get('/product/{product}/edit',[ProductController::class,'edit'])->name('product.edit');
-Route::put('/product/{product}',[ProductController::class,'update'])->name('product.update');
-
-
-//Route::resource('/book',BookController::class);
-
-Route::get('/book',[BookController::class,'index'])->name('book.index');
-Route::get('/book/create',[BookController::class,'create'])->name('book.create');
-Route::post('/book',[BookController::class,'store'])->name('book.store');
-Route::get('/book/{book}',[BookController::class,'show'])->name('book.show');
-Route::delete('/book/{book}',[BookController::class,'destroy'])->name('book.destroy');
-Route::get('/book/{book}/edit',[BookController::class,'edit'])->name('book.edit');
-Route::put('/book/{book}',[BookController::class,'update'])->name('book.update');
 
 
 // Using a Controller (Recommended)
@@ -102,8 +103,6 @@ Route::get('/login', [AuthController::class, 'index'])->name('login');
 Route::post('/post-login', [AuthController::class, 'postLogin'])->name('login.post');
 Route::get('/registration', [AuthController::class, 'registration'])->name('register');
 Route::post('/post-registration', [AuthController::class, 'postRegistration'])->name('register.post');
-Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard')->middleware('auth');
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // change password
 Route::get('/change-password', [ChangePasswordController::class, 'index'])->name('form.password');
@@ -115,7 +114,7 @@ Route::patch('/update-profile/{user}',  [UpdateProfileController::class, 'update
 
 // forget password
 Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
-Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post'); 
+Route::post('forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
 Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
 Route::post('reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 
@@ -133,12 +132,6 @@ Route::delete('/remove-from-cart', [StoreController::class, 'remove'])->name('re
 
 // checkout
 Route::get('/checkout', [StoreController::class, 'checkout'])->name('cart.checkout');
-
-// order
-Route::get('/orders', [OrderController::class, 'index'])->name('admin.order');
-Route::post('/orders/approve/{id}', [OrderController::class, 'approve'])->name('admin.approve');
-Route::post('/orders/reject/{id}', [OrderController::class, 'reject'])->name('admin.reject');
-
 
 Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
 

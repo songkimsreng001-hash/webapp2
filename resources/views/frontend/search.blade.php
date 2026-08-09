@@ -3,14 +3,12 @@
 <div class="container">
     <br>
     <div class="row">
-        {{ Html::form('GET','/search')->open()}}
-        <div class="input-group">
-            {{ Html::input('text','keyword', $keyword ?? '')->class('form-control') }}
-            <span class="input-group-btn">
-                {{ Html::submit('Search')->class('btn btn-primary') }}
-            </span>
-        </div>
-        {{  Html::form()->close() }}
+        <form action="{{ url('/search') }}" method="GET">
+            <div class="input-group">
+                <input type="text" name="keyword" value="{{ old('keyword', $keyword ?? '') }}" class="form-control" placeholder="Search products">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
         <br><br>
         @foreach($products as $product)
         <div class="col-xs-18 col-sm-6 col-md-3">

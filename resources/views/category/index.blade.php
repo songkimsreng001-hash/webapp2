@@ -28,9 +28,11 @@
             </td>
             <td><a class="btn btn-primary" href="{!! url('/category/' . $category->id . '/edit') !!}">Edit</a></td>
             <td>
-                    {{ Html::form('DELETE','category/'. $category->id)->open()}}
-                        <button onclick="return confirmAction()" class="btn btn-danger delete">Delete</button>
-                    {{ Html::form()->close() }}
+                <form action="{{ route('category.delete', $category->id) }}" method="POST" onsubmit="return confirmAction()">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
             </td>
         </tr>
         @endforeach

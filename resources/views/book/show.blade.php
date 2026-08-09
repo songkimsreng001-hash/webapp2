@@ -43,7 +43,7 @@
 
     <a
         class="btn btn-secondary"
-        href="{{ url('/book') }}">
+        href="{{ route('book.index') }}">
         Back
     </a>
 

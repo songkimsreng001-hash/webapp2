@@ -28,34 +28,26 @@
             <td>{{ $loop->iteration }}</td>
             <td>{{ $order->user->name }}</td>
             <td>{{ $order->user->email }}</td>
-            <td>{{ $order->id}}</td>
-            <td style="text-align: left;">@foreach ($order->orderItems as $item)
-                    {{$loop->iteration}} {{ $item->product->name}} x {{$item->quantity}} = ${{ $item->product->price * $item->quantity}} <br>
+            <td>{{ $order->id }}</td>
+            <td style="text-align: left;">
+                @foreach ($order->orderItems as $item)
+                    {{ $loop->iteration }} {{ $item->product->name }} x {{ $item->quantity }} = ${{ $item->product->price * $item->quantity }} <br>
                 @endforeach
             </td>
             <td>${{ $order->amount }}</td>
-            <td>@if($order->status)
-                    confirmed
-                @else
-                    pendding
-                @endif
+            <td>{{ $order->statusLabel() }}</td>
+            <td>
+                <form action="{{ route('admin.approve', $order->id) }}" method="post">
+                    @csrf
+                    <button class="text-primary btn btn-link p-0">Confirm</button>
+                </form>
             </td>
-            <div class="orderOption">
-                <td>
-                    <form action="{{ route('admin.approve', $order->id) }}" method="post" enctype="multipart/form-data">
-                        @csrf
-                        <button class="text-primary">Confirm</button>
-                    </form>
-                </td>
-
-                <td>
-                    <form action="{{ route('admin.reject', $order->id) }}" method="post" enctype="multipart/form-data">
-                        @csrf
-                        <button class="text-danger">Reject</button>
-                    </form>
-                </td>
-            </div>
-
+            <td>
+                <form action="{{ route('admin.reject', $order->id) }}" method="post">
+                    @csrf
+                    <button class="text-danger btn btn-link p-0">Reject</button>
+                </form>
+            </td>
         </tr>
         @endforeach
     </tbody>

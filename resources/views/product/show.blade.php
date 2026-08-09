@@ -9,11 +9,11 @@
                 <p>Category: {{$product->category->name}}</p>
                 <p>Price: {{$product->price}}</p>
                 <p>Description: {{$product->description}}</p>
-                <div>{!! Html::img('/img/'.$product->image, $product->name)->attributes(['style'=>'width:300px;height:150px']) !!}</div>
+                <div><img src="{{ asset('img/'.$product->image) }}" alt="{{ $product->name }}" style="width:300px;height:150px;object-fit:cover;" /></div>
             </div>
 		</div>
         <br>
-        <a class="btn btn-secondary" href="{{url('/product')}}">Back</a>
+        <a class="btn btn-secondary" href="{{ route('product.index') }}">Back</a>
 	</div>
 </main>
 @endsection

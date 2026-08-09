@@ -8,11 +8,11 @@
 
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item">
-            <a href="/book">View All Books</a>
+            <a href="{{ route('book.index') }}">Books</a>
         </li>
 
         <li class="breadcrumb-item active">
-            <a href="/book/create">Create Book</a>
+            Edit Book
         </li>
     </ol>
 
@@ -44,45 +44,33 @@
             @endif
 
 
-            {{ Html::modelForm($book,'PUT',
-                route('book.update',$book->BookID))->open()
-            }}
+            <form action="{{ route('book.update', $book->BookID) }}" method="POST">
+                @csrf
+                @method('PUT')
 
-            {{-- Title --}}
-            {!! Html::label('Title','Title') !!}
-            {!! Html::input('text','Title',null)
-                ->class('form-control') !!}
-            <br>
+                <div class="mb-3">
+                    <label for="Title" class="form-label">Title</label>
+                    <input type="text" name="Title" id="Title" class="form-control" value="{{ old('Title', $book->Title) }}" required>
+                </div>
 
-            {{-- Author --}}
-            {!! Html::label('Author','Author') !!}
-            {!! Html::input('text','Author',null)
-                ->class('form-control') !!}
-            <br>
+                <div class="mb-3">
+                    <label for="Author" class="form-label">Author</label>
+                    <input type="text" name="Author" id="Author" class="form-control" value="{{ old('Author', $book->Author) }}" required>
+                </div>
 
-            {{-- ISBN --}}
-            {!! Html::label('ISBN','ISBN') !!}
-            {!! Html::input('text','ISBN',null)
-                ->class('form-control') !!}
-            <br>
+                <div class="mb-3">
+                    <label for="ISBN" class="form-label">ISBN</label>
+                    <input type="text" name="ISBN" id="ISBN" class="form-control" value="{{ old('ISBN', $book->ISBN) }}" required>
+                </div>
 
-            {{-- Publish Year --}}
-            {!! Html::label('Publish Year','PublishYear') !!}
-            {!! Html::input('number','PublishYear',null)
-                ->class('form-control')
-                ->attribute('min','1900')
-                ->attribute('max',date('Y')) !!}
-            <br>
+                <div class="mb-3">
+                    <label for="PublishYear" class="form-label">Publish Year</label>
+                    <input type="number" name="PublishYear" id="PublishYear" class="form-control" min="1900" max="{{ date('Y') }}" value="{{ old('PublishYear', $book->PublishYear) }}" required>
+                </div>
 
-            {{ Html::submit('Update')
-                ->class('btn btn-primary') }}
-
-            <a class="btn btn-secondary"
-               href="{{ url('/book') }}">
-               Back
-            </a>
-
-            {!! Html::closeModelForm() !!}
+                <button type="submit" class="btn btn-primary">Update</button>
+                <a class="btn btn-secondary" href="{{ route('book.index') }}">Back</a>
+            </form>
 
         </div>
     </div>

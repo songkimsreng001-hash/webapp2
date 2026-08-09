@@ -6,21 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-class UpdateProfileController extends Controller implements HasMiddleware
+class UpdateProfileController extends Controller
 {
     use ValidatesRequests;
-    public static function middleware(): array
-    {
-        return [
-            new Middleware('auth'),
-        ];
-    }
     public function __construct()
     {
-        $this->middleware();
+        $this->middleware('auth');
     }
     public function editProfile(User $user)
     {

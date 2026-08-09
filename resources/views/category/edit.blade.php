@@ -19,14 +19,18 @@
         </ul>
     </div>
     @endif
-    {{ Html::modelForm($category ,'PUT', route('category.update', $category->id))->open() }}
-    {!! Html::label('Name:','name') !!}
-    {!! Html::input('text','name', null)->class('form-control')  !!}
-    <br>
-    {!! Html::label('Description:','description') !!}
-    {!! Html::textarea('description', null)->class('form-control') !!}
-    <br>
-    {{ Html::submit('Update')->class('btn btn-primary') }}
-    <a class="btn btn-secondary" href="{{route('category.list')}}">Back</a>
-    {!! Html::closeModelForm() !!}
+    <form action="{{ route('category.update', $category->id) }}" method="POST">
+        @csrf
+        @method('PUT')
+        <div class="mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $category->name) }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description:</label>
+            <textarea name="description" id="description" class="form-control" rows="4" required>{{ old('description', $category->description) }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a class="btn btn-secondary" href="{{ route('category.list') }}">Back</a>
+    </form>
 @endsection

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 
@@ -82,9 +83,28 @@ class AuthController extends Controller
             $user = Auth::user();
             $products = Product::orderBy('created_at', 'desc')->take(12)->get();
 
+            $topProducts = DB::table('order_items')
+                ->join('products', 'order_items.product_id', '=', 'products.id')
+                ->select('products.name', DB::raw('SUM(order_items.quantity) as total_quantity'))
+                ->groupBy('products.name')
+                ->orderByDesc('total_quantity')
+                ->take(5)
+                ->get();
+
+            $topCategories = DB::table('order_items')
+                ->join('products', 'order_items.product_id', '=', 'products.id')
+                ->join('categories', 'products.category_id', '=', 'categories.id')
+                ->select('categories.name', DB::raw('SUM(order_items.quantity) as total_quantity'))
+                ->groupBy('categories.name')
+                ->orderByDesc('total_quantity')
+                ->take(5)
+                ->get();
+
             return view('auth.dashboard')->with([
                 'user' => $user,
                 'products' => $products,
+                'topProducts' => $topProducts,
+                'topCategories' => $topCategories,
             ]);
         }
         return redirect("login")->withErrors('You do not have access!');
