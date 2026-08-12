@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
-
+use App\Http\Controllers\Api\GoogleOAuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes  (prefix: /api)
@@ -22,6 +22,13 @@ use App\Http\Controllers\Api\PaymentController;
 // ─── Public routes ──────────────────────────────────────────────────────────
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',    [AuthController::class, 'login'])->name('api.login');
+
+// Google login (mobile token flow)
+Route::prefix('google')->group(function () {
+    Route::get('/oauth/redirect', [GoogleOAuthController::class, 'googleOAuthRedirect']);
+    Route::get('/oauth/callback', [GoogleOAuthController::class, 'googleOAuthCallback']);
+    Route::post('/oauth/exchange/token', [GoogleOAuthController::class, 'googleOAuthExchangeToken'])->middleware('auth:sanctum');
+});
 
 // Public product browsing (no login needed)
 Route::get('/products',              [ProductController::class, 'index']);

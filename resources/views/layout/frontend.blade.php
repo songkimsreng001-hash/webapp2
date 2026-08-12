@@ -372,7 +372,6 @@
                             <a href="{{ route('login') }}">Login</a>
                             <a href="{{ route('register') }}">Register</a>
                         @else
-                            <a href="{{ route('dashboard') }}">Dashboard</a>
                             <a href="{{ route('logout') }}">Logout</a>
                         @endguest
                         <a href="{{ route('cart') }}">My Cart</a>
