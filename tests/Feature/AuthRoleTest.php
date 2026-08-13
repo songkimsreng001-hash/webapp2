@@ -45,4 +45,19 @@ class AuthRoleTest extends TestCase
         $response->assertRedirect('/');
         $this->assertAuthenticatedAs($user);
     }
+
+    public function test_admin_dashboard_renders_metrics(): void
+    {
+        $this->actingAs(User::factory()->create([
+            'name' => 'Admin User',
+            'email' => 'admin_dashboard@example.com',
+            'password' => 'password',
+            'role' => 'admin',
+        ]));
+
+        $this->get('/dashboard')
+            ->assertOk()
+            ->assertSee('Customers')
+            ->assertSee('Sales Analytics');
+    }
 }

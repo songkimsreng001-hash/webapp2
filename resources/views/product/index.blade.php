@@ -10,12 +10,12 @@
 </div>
 @endif
 @if (count($products) > 0)
-<div class="panel panel-default">
-    <div class="panel-heading">
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="card-header bg-white fw-semibold py-3">
         All Products
     </div>
 
-    <div class="panel-body">
+    <div class="card-body">
         <table id="myTable" class="table table-striped task-table">
             <thead>
                 <tr>
@@ -47,7 +47,7 @@
                     <td><a class="btn btn-primary" href="{!! url('product/' . $product->id . '/edit') !!}">Edit</a></td>
 
                     <td>
-                        <form action="{{ route('product.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                        <form action="{{ route('product.destroy', $product->id) }}" method="POST" data-confirm="This product will be deleted." data-confirm-title="Delete product?">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Delete</button>
@@ -59,35 +59,6 @@
         </table>
     </div>
 </div>
-<script>
-    new DataTable('#myTable');
-    $(".delete").click(function() {
-        var form = $(this).closest('form');
-        $('<div></div>').appendTo('body')
-            .html('<div><h6> Are you sure ?</h6></div>')
-            .dialog({
-                modal: true,
-                title: 'Delete message',
-                zIndex: 10000,
-                autoOpen: true,
-                width: 'auto',
-                resizable: false,
-                buttons: {
-                    Yes: function() {
-                        $(this).dialog('close');
-                        form.submit();
-                    },
-                    No: function() {
-                        $(this).dialog("close");
-                        return false;
-                    }
-                },
-                close: function(event, ui) {
-                    $(this).remove();
-                }
-            });
-        return false;
-    });
-</script>
+
 @endif
 @endsection

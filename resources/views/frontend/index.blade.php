@@ -9,7 +9,7 @@
         <h1>Fresh picks, delivered fast</h1>
         <p>Discover the latest food, drinks, and more from 24/7 NHAM.</p>
         <form class="hero-search" action="{{ url('/search') }}" method="GET">
-            <input type="text" name="keyword" placeholder="Search products…" value="{{ old('keyword') }}">
+            <input type="text" name="keyword" placeholder="Search products…" value="{{ old('keyword', request('keyword')) }}">
             <button type="submit"><i class="fas fa-search me-1"></i> Search</button>
         </form>
     </div>

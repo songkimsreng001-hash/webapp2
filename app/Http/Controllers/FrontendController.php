@@ -90,6 +90,29 @@ class FrontendController extends Controller
                 ->with('keyword', $keyword);
         }
     }
+
+    public function navbarSearch(Request $request)
+    {
+        $keyword = trim((string) $request->input('keyword', $request->input('title', '')));
+        if (mb_strlen($keyword) < 2) {
+            return response()->json([]);
+        }
+
+        return response()->json(
+            Product::where('name', 'like', '%' . $keyword . '%')
+                ->orderBy('name')
+                ->limit(8)
+                ->get(['id', 'name', 'price'])
+                ->map(fn ($product) => [
+                    'id' => $product->id,
+                    'title' => $product->name,
+                    'price' => number_format((float) $product->price, 2),
+                    'url' => url('/show/' . $product->id),
+                ])
+                ->values()
+        );
+    }
+
     public function categories()
     {
         $categories = Category::all();

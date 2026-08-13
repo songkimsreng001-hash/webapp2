@@ -1,7 +1,7 @@
 @extends('layout.backend')
 @section('title', 'ORDERS LIST')
 @section('content')
-<div class="table-title">
+<div class="d-flex justify-content-between align-items-center mb-4"><div>
     <div class="row">
         <div class="col-sm-5">
             <h2>@yield('title')</b></h2>
@@ -39,17 +39,17 @@
             <td>
                 <form action="{{ route('admin.approve', $order->id) }}" method="post">
                     @csrf
-                    <button class="text-primary btn btn-link p-0">Confirm</button>
+                    <button class="btn btn-sm btn-outline-success"><i class="bi bi-check-circle me-1"></i>Confirm</button>
                 </form>
             </td>
             <td>
                 <form action="{{ route('admin.reject', $order->id) }}" method="post">
                     @csrf
-                    <button class="text-danger btn btn-link p-0">Reject</button>
+                    <button class="btn btn-sm btn-outline-danger"><i class="bi bi-x-circle me-1"></i>Reject</button>
                 </form>
             </td>
         </tr>
         @endforeach
     </tbody>
-</table>
+</table></div></div>
 @endsection

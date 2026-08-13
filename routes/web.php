@@ -95,7 +95,8 @@ Route::get('/',[FrontendController::class,'index']);
 Route::get('/list',[FrontendController::class,'list']);
 Route::get('/show/{id}',[FrontendController::class,'show']);
 
-Route::get('/search', [FrontendController::class,'getBySearch']);
+Route::get('/search', [FrontendController::class,'getBySearch'])->name('frontend.search');
+Route::get('/navbar-search', [FrontendController::class, 'navbarSearch'])->name('frontend.navbar-search');
 Route::get('/frontend', [FrontendController::class,'categories'])->name('frontend.categories');
 Route::get('/frontend/{category}', [FrontendController::class,'getByCategory'])->name('frontend.category');
 
@@ -104,6 +105,10 @@ Route::get('/login', [AuthController::class, 'index'])->name('login');
 Route::post('/post-login', [AuthController::class, 'postLogin'])->name('login.post');
 Route::get('/registration', [AuthController::class, 'registration'])->name('register');
 Route::post('/post-registration', [AuthController::class, 'postRegistration'])->name('register.post');
+
+// Google OAuth
+Route::get('/auth/redirect', [AuthController::class, 'redirectToGoogle'])->name('auth.google.redirect');
+Route::get('/auth/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
 // change password
 Route::get('/change-password', [ChangePasswordController::class, 'index'])->name('form.password');
@@ -132,9 +137,11 @@ Route::patch('/update-cart', [StoreController::class, 'update'])->name('update.c
 Route::delete('/remove-from-cart', [StoreController::class, 'remove'])->name('remove.from.cart');
 
 // checkout
-Route::get('/checkout', [StoreController::class, 'checkout'])->name('cart.checkout');
-
-Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout', [StoreController::class, 'checkout'])->name('cart.checkout');
+    Route::post('/checkout/complete', [StoreController::class, 'completeCheckout'])->name('checkout.complete');
+    Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent'])->name('payment.intent');
+});
 
 Route::fallback(function () {
     return response()->view('errors.404', [], 404);

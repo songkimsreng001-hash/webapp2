@@ -96,10 +96,21 @@
 <script>
     function stepQty(delta) {
         const input = document.getElementById('qtyInput');
-        let val = parseInt(input.value) + delta;
+        let val = parseInt(input.value || '1') + delta;
         if (val < 1) val = 1;
         if (val > 99) val = 99;
         input.value = val;
     }
+
+    document.getElementById('qtyInput').addEventListener('input', function () {
+        let val = Math.max(1, Math.min(99, parseInt(this.value || '1')));
+        this.value = val;
+    });
+
+    document.getElementById('addToCartBtn').addEventListener('click', function () {
+        const url = new URL(this.href, window.location.origin);
+        url.searchParams.set('quantity', document.getElementById('qtyInput').value || '1');
+        this.href = url.toString();
+    });
 </script>
 @endpush

@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>24/7 NHAM</title>
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -144,8 +146,14 @@
                                 <li><a class="dropdown-item" href="{{ route('form.password') }}">
                                     <i class="fas fa-key me-2 text-warning"></i> Change Password</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="{{ route('logout') }}">
-                                    <i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                                <li>
+                                    <form action="{{ route('logout') }}" method="POST" class="d-inline w-100">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item text-danger w-100 text-start border-0 bg-transparent">
+                                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
                             </ul>
                         </li>
                     @endguest
@@ -160,7 +168,17 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if(session('success'))
+    <script>Swal.fire({toast:true,position:'top-end',icon:'success',title:@json(session('success')),showConfirmButton:false,timer:2600});</script>
+    @endif
+    @if(session('error'))
+    <script>Swal.fire({toast:true,position:'top-end',icon:'error',title:@json(session('error')),showConfirmButton:false,timer:3200});</script>
+    @endif
+    @if($errors->any())
+    <script>Swal.fire({icon:'error',title:'Please check the form',html:@json(implode('<br>', $errors->all()))});</script>
+    @endif
     @stack('scripts')
 </body>
 </html>

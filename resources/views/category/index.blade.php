@@ -28,7 +28,7 @@
             </td>
             <td><a class="btn btn-primary" href="{!! url('/category/' . $category->id . '/edit') !!}">Edit</a></td>
             <td>
-                <form action="{{ route('category.delete', $category->id) }}" method="POST" onsubmit="return confirmAction()">
+                <form action="{{ route('category.delete', $category->id) }}" method="POST" data-confirm="This category will be deleted." data-confirm-title="Delete category?">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger">Delete</button>
@@ -38,15 +38,6 @@
         @endforeach
     </tbody>
 </table>
-<script>
-    function confirmAction() {
-        let confirmAction = confirm("Are you sure to delete?");
-        if (confirmAction == true) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-</script>
+
 @endif
 @endsection

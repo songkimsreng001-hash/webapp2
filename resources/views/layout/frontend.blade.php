@@ -12,7 +12,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -811,7 +812,7 @@
                             <div class="navbar-search">
                                 <i class="bi bi-search navbar-search-icon"></i>
                                 <input type="text" name="title" id="navbarSearchInput" class="navbar-search-input"
-                                    value="{{ request('title') }}" placeholder="Search product title..."
+                                    value="{{ request('keyword', $keyword ?? '') }}" placeholder="Search product title..."
                                     autocomplete="off">
                                 <button type="submit" class="navbar-search-button">
                                     Search
@@ -839,10 +840,13 @@
                             Login
                         </a>
                     @else
-                        <a href="{{ route('logout') }}" class="btn-nav-logout">
-                            <i class="bi bi-box-arrow-right me-1"></i>
-                            Logout
-                        </a>
+                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn-nav-logout border-0">
+                                <i class="bi bi-box-arrow-right me-1"></i>
+                                Logout
+                            </button>
+                        </form>
                     @endguest
 
                 </div>
@@ -897,7 +901,10 @@
                             <a href="{{ route('login') }}">Login</a>
                             <a href="{{ route('register') }}">Register</a>
                         @else
-                            <a href="{{ route('logout') }}">Logout</a>
+                            <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-link p-0 text-white text-decoration-none">Logout</button>
+                            </form>
                         @endguest
                         <a href="{{ route('cart') }}">My Cart</a>
                     </div>
@@ -914,7 +921,24 @@
          JAVASCRIPT
     ========================================================= -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if(session('success'))
+    <script>
+        Swal.fire({toast:true, position:'top-end', icon:'success', title:@json(session('success')), showConfirmButton:false, timer:2600, timerProgressBar:true});
+    </script>
+    @endif
+    @if(session('error'))
+    <script>
+        Swal.fire({toast:true, position:'top-end', icon:'error', title:@json(session('error')), showConfirmButton:false, timer:3200, timerProgressBar:true});
+    </script>
+    @endif
+    @if($errors->any())
+    <script>
+        Swal.fire({icon:'error', title:'Please check the form', html:@json(implode('<br>', $errors->all()))});
+    </script>
+    @endif
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

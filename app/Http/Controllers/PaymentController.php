@@ -27,56 +27,41 @@ class PaymentController extends Controller
     public function createPaymentIntent(Request $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'items'              => 'required|array|min:1',
-                'items.*.product_id' => 'required|integer|exists:products,id',
-                'items.*.quantity'   => 'required|integer|min:1',
-            ]);
+            $cart = $request->session()->get('cart', []);
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'message' => 'Validation failed',
-                    'errors'  => $validator->errors(),
-                ], 422);
+            if (empty($cart)) {
+                return response()->json(['message' => 'Your cart is empty.'], 422);
             }
 
-            // FIX: Calculate amount server-side — never trust client amounts
             $totalAmount = 0;
-            foreach ($request->items as $item) {
-                $product      = Product::findOrFail($item['product_id']);
-                $totalAmount += $product->price * $item['quantity'];
+            foreach ($cart as $item) {
+                $product = Product::findOrFail($item['product_id']);
+                $quantity = max(1, (int) $item['quantity']);
+                $totalAmount += (float) $product->price * $quantity;
             }
 
             $amountInCents = (int) round($totalAmount * 100);
-
-            if ($amountInCents < 50) {   // Stripe minimum is $0.50
-                return response()->json([
-                    'message' => 'Order amount is too small',
-                ], 422);
+            if ($amountInCents < 50) {
+                return response()->json(['message' => 'Order amount is too small.'], 422);
             }
 
             Stripe::setApiKey(config('services.stripe.secret'));
 
             $paymentIntent = PaymentIntent::create([
-                'amount'                    => $amountInCents,
-                'currency'                  => 'usd',
+                'amount' => $amountInCents,
+                'currency' => 'usd',
                 'automatic_payment_methods' => ['enabled' => true],
-                'metadata'                  => [
-                    'user_id' => $request->user()->id,
-                ],
+                'metadata' => ['user_id' => $request->user()->id],
             ]);
 
             return response()->json([
                 'clientSecret' => $paymentIntent->client_secret,
-                'amount'       => $amountInCents,
-                'currency'     => 'usd',
+                'amount' => $amountInCents,
+                'currency' => 'usd',
             ]);
-
         } catch (Throwable $e) {
-            return response()->json([
-                'message' => 'Payment intent creation failed',
-                'error'   => $e->getMessage(),
-            ], 500);
+            report($e);
+            return response()->json(['message' => 'Payment intent creation failed.'], 500);
         }
     }
 }

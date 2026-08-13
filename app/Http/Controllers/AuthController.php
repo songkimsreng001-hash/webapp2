@@ -79,8 +79,29 @@ class AuthController extends Controller
         // Stat card counts
         $totalProducts   = Product::count();
         $totalOrders     = Order::count();
+        $totalCustomers  = User::count();
         $totalCategories = DB::table('categories')->count();
         $totalRevenue    = Order::where('status', 2)->sum('amount'); // Paid only
+
+        $startOfWeek = now()->subDays(6)->startOfDay();
+        $dailyRevenue = Order::whereBetween('created_at', [$startOfWeek, now()->endOfDay()])
+            ->selectRaw('DATE(created_at) as order_date, SUM(amount) as revenue')
+            ->groupBy(DB::raw('DATE(created_at)'))
+            ->get()
+            ->keyBy('order_date')
+            ->map(fn ($row) => (float) $row->revenue);
+
+        $weeklySales = collect(range(0, 6))->map(function ($offset) use ($startOfWeek, $dailyRevenue) {
+            $date = $startOfWeek->copy()->addDays($offset);
+            $key  = $date->format('Y-m-d');
+
+            return [
+                'day'     => $date->format('D'),
+                'short'   => $date->format('D'),
+                'revenue' => (float) ($dailyRevenue[$key] ?? 0),
+            ];
+        });
+        $weeklyMax = max($weeklySales->max('revenue') ?? 0, 0);
 
         // Top products by units sold
         $topProducts = DB::table('order_items')
@@ -107,8 +128,11 @@ class AuthController extends Controller
             'products',
             'totalProducts',
             'totalOrders',
+            'totalCustomers',
             'totalCategories',
             'totalRevenue',
+            'weeklySales',
+            'weeklyMax',
             'topProducts',
             'approvedOrders',
             'pendingOrders',

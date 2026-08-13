@@ -217,21 +217,43 @@
                 id: ele.closest("tr").attr("data-id"),
                 quantity: ele.val()
             },
-            success: function () { window.location.reload(); }
+            success: function () {
+                Swal.fire({toast:true,position:'top-end',icon:'success',title:'Cart updated',showConfirmButton:false,timer:1200});
+                setTimeout(function(){ window.location.reload(); }, 500);
+            },
+            error: function () {
+                Swal.fire({icon:'error',title:'Unable to update cart',text:'Please try again.'});
+            }
         });
     });
 
     $(".remove-from-cart").on("click", function () {
-        if (!confirm("Remove this item from your cart?")) return;
         var ele = $(this);
-        $.ajax({
-            url: '{{ route("remove.from.cart") }}',
-            method: "DELETE",
-            data: {
-                _token: '{{ csrf_token() }}',
-                id: ele.closest("tr").attr("data-id")
-            },
-            success: function () { window.location.reload(); }
+        Swal.fire({
+            title: "Remove this item?",
+            text: "The item will be removed from your cart.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#dc3545",
+            cancelButtonColor: "#64748b",
+            confirmButtonText: "Yes, remove it"
+        }).then(function(result) {
+            if (!result.isConfirmed) return;
+            $.ajax({
+                url: '{{ route("remove.from.cart") }}',
+                method: "DELETE",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: ele.closest("tr").attr("data-id")
+                },
+                success: function () {
+                    Swal.fire({toast:true,position:'top-end',icon:'success',title:'Item removed',showConfirmButton:false,timer:1200});
+                    setTimeout(function(){ window.location.reload(); }, 500);
+                },
+                error: function () {
+                    Swal.fire({icon:'error',title:'Unable to remove item',text:'Please try again.'});
+                }
+            });
         });
     });
 </script>

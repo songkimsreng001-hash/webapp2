@@ -9,3 +9,16 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+:root {
+    --bs-body-font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: #f8fafc;
+    color: #1f2937;
+}
+
+.swal2-popup {
+    font-family: inherit;
+}
