@@ -80,7 +80,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/orders/reject/{id}', [OrderController::class, 'reject'])->name('admin.reject');
         Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
     });
-    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 

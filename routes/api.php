@@ -7,7 +7,6 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
-use App\Http\Controllers\Api\GoogleOAuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes  (prefix: /api)
@@ -55,11 +54,4 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Stripe payment — create intent before showing payment sheet
     Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
-});
-
-
-Route::prefix('google')->group(function () {
-    Route::get('/oauth/redirect', [GoogleOAuthController::class, 'googleOAuthRedirect']);
-    Route::get('/oauth/callback', [GoogleOAuthController::class, 'googleOAuthCallback']);
-    Route::post('/oauth/exchange/token', [GoogleOAuthController::class, 'googleOAuthExchangeToken'])->middleware('auth:sanctum');
 });

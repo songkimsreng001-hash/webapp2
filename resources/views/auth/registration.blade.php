@@ -67,6 +67,12 @@
                         <i class="fas fa-user-plus me-2"></i> Create Account
                     </button>
 
+                    <div class="text-center my-3">
+                        <a href="{{ route('auth.google.redirect') }}" class="btn btn-outline-secondary btn-google">
+                            <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" style="width:18px; height:18px; vertical-align:middle; margin-right:8px"> Register with Google
+                        </a>
+                    </div>
+
                     <p class="text-center mt-3 mb-0" style="font-size:.83rem; color:#64748b">
                         Already have an account?
                         <a href="{{ route('login') }}" class="auth-link ms-1">Sign in</a>

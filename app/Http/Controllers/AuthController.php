@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -131,5 +133,44 @@ class AuthController extends Controller
         Auth::logout();
 
         return redirect('login')->withSuccess('You have been logged out.');
+    }
+
+    /**
+     * Redirect the user to the Google OAuth page.
+     */
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    /**
+     * Obtain the user information from Google and log them in.
+     */
+    public function handleGoogleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->stateless()->user();
+
+            $email = $googleUser->getEmail();
+
+            if (! $email) {
+                return redirect('/login')->withErrors('Unable to retrieve email from Google.');
+            }
+
+            $user = User::firstOrCreate([
+                'email' => $email,
+            ], [
+                'name' => $googleUser->getName() ?? $googleUser->getNickname() ?? $email,
+                'password' => Hash::make(Str::random(24)),
+                'role' => 'user',
+            ]);
+
+            Auth::login($user, true);
+
+            return redirect()->intended('/')->withSuccess('Logged in with Google.');
+
+        } catch (\Exception $e) {
+            return redirect('/login')->withErrors('Google login failed.');
+        }
     }
 }
