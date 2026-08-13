@@ -37,10 +37,10 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:20|min:3',
+            'name' => 'required|max:50|min:3',
             'category_id' => 'required|integer',
             'price' => 'required|max:20|min:3',
-            'image' => 'required|mimes:jpg,jpeg,png,gif,JPG,JPEG,PNG,GIF',
+            'image' => 'required|mimes:jpg,jpeg,png,gif,webp,JPG,JPEG,PNG,GIF,WEBP',
             'description' => 'required|max:1000|min:10',
         ]);
 
@@ -96,10 +96,10 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:20|min:3',
+            'name' => 'required|max:50|min:3',
             'category_id' => 'required|integer',
             'price' => 'required|max:20|min:3',
-            'image' => 'mimes:jpg,jpeg,png,gif',
+            'image' => 'mimes:jpg,jpeg,png,gif,webp,JPG,JPEG,PNG,GIF,WEBP',
             'description' => 'required|max:1000|min:10',
         ]);
 

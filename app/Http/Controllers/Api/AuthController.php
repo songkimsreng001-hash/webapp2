@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+
 
 class AuthController extends Controller
 {
@@ -83,49 +83,64 @@ class AuthController extends Controller
      * email, and return a Sanctum token in the exact same shape as login()
      * and register() above — so the Flutter side needs zero special-casing.
      */
-    public function googleLogin(Request $request)
+
+    function googleOAuthRedirect(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'id_token' => 'required|string',
-        ]);
+        $callback_url = $request->query('callback_url', '');
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+        $redirectUrl = Socialite::driver('google')
+            ->stateless()
+            ->with(['state' => base64_encode($callback_url)])
+            ->redirect()
+            ->getTargetUrl();
 
+        return response(['redirect_url' => $redirectUrl], 200);
+    }
+
+    function googleOAuthCallback(Request $request)
+    {
+        $callback_url = base64_decode($request->query('state', ''));
         try {
-            $googleUser = Socialite::driver('google')
-                ->stateless()
-                ->userFromToken($request->id_token);
-        } catch (\Throwable $e) {
-            return response()->json([
-                'message' => 'Invalid Google token',
-            ], 401);
+            $googleUser = Socialite::driver('google')->stateless()->user();
+        } catch (\Exception $e) {
+            return redirect($callback_url . '?error=google_oauth_failed');
         }
 
-        $user = User::where('email', $googleUser->getEmail())->first();
+        $user = User::firstOrCreate(
+            ['email' => $googleUser->getEmail()],
+            [
+                'name' => $googleUser->getName(),
+            ]
+        );
 
-        if (! $user) {
-            $user = User::create([
-                'name'              => $googleUser->getName() ?? $googleUser->getNickname() ?? 'Google User',
-                'email'             => $googleUser->getEmail(),
-                'password'          => Hash::make(Str::random(32)), // unusable random password
-                'google_id'         => $googleUser->getId(),
-                'email_verified_at' => now(), // Google already verified this email
-            ]);
-        } elseif (empty($user->google_id)) {
-            // Link an existing password-based account to this Google id
-            $user->update(['google_id' => $googleUser->getId()]);
+        $user->save();
+
+        if (!$user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
         }
 
-        // Same token-rotation pattern as login()
-        $user->tokens()->delete();
-        $token = $user->createToken('api-token')->plainTextToken;
+        $token = $user->createToken('auth_token', ['exchange-new-token'], now()->addMinute())->plainTextToken;
 
-        return response()->json([
-            'user'  => $user,
-            'token' => $token,
-        ]);
+        return redirect($callback_url . '?token=' . urlencode($token));
+    }
+
+    function googleOAuthExchangeToken(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user->currentAccessToken()->can('exchange-new-token')) {
+            return response(['message' => 'Invalid token.'], 403);
+        }
+
+        $user->currentAccessToken()->delete();
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response([
+            'message' => 'User signed in.',
+            'user' => new UserResource($user),
+            'token' => $token
+        ], 200);
     }
 
     public function logout(Request $request)

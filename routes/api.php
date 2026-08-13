@@ -23,12 +23,6 @@ use App\Http\Controllers\Api\GoogleOAuthController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',    [AuthController::class, 'login'])->name('api.login');
 
-// Google login (mobile token flow)
-Route::prefix('google')->group(function () {
-    Route::get('/oauth/redirect', [GoogleOAuthController::class, 'googleOAuthRedirect']);
-    Route::get('/oauth/callback', [GoogleOAuthController::class, 'googleOAuthCallback']);
-    Route::post('/oauth/exchange/token', [GoogleOAuthController::class, 'googleOAuthExchangeToken'])->middleware('auth:sanctum');
-});
 
 // Public product browsing (no login needed)
 Route::get('/products',              [ProductController::class, 'index']);
@@ -58,6 +52,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders/{id}',   [OrderController::class, 'show']);
     Route::post('/orders',       [OrderController::class, 'store']);
 
+
     // Stripe payment — create intent before showing payment sheet
     Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
+});
+
+
+Route::prefix('google')->group(function () {
+    Route::get('/oauth/redirect', [GoogleOAuthController::class, 'googleOAuthRedirect']);
+    Route::get('/oauth/callback', [GoogleOAuthController::class, 'googleOAuthCallback']);
+    Route::post('/oauth/exchange/token', [GoogleOAuthController::class, 'googleOAuthExchangeToken'])->middleware('auth:sanctum');
 });
