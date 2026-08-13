@@ -74,7 +74,9 @@
         </div>
 
         <div class="d-flex justify-content-center mt-5">
-            {{ $products->links('pagination::bootstrap-5') }}
+            @if(method_exists($products, 'links'))
+                {{ $products->links('pagination::bootstrap-5') }}
+            @endif
         </div>
     @endif
 </div>

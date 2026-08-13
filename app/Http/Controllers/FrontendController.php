@@ -15,7 +15,8 @@ class FrontendController extends Controller
     public function index()
     {
         $categories = Category::all();
-        $products = Product::orderBy('created_at','DESC')->paginate(8);
+        // Show all products on the home page
+        $products = Product::orderBy('created_at','DESC')->get();
         return view('frontend.index')
             ->with('products', $products)
             ->with('categories', $categories);
@@ -24,7 +25,7 @@ class FrontendController extends Controller
      public function list()
     {
         $categories = Category::all();
-        $products = Product::orderBy('created_at','DESC')->paginate(3);
+                $products = Product::orderBy('created_at','DESC')->paginate(12);
       return view('frontend.list')->with('products',$products)->with('categories', $categories);
     }
 
@@ -81,18 +82,18 @@ class FrontendController extends Controller
         $keyword = !empty($request->input('keyword')) ? $request->input('keyword') : "";
         if ($keyword != "") {
             return view('frontend.search')
-                ->with('products', Product::where('name', 'LIKE', '%' . $keyword . '%')->paginate(2))
+                ->with('products', Product::where('name', 'LIKE', '%' . $keyword . '%')->paginate(12))
                 ->with('keyword', $keyword);
         } else {
             return view('frontend.search')
-                ->with('products', Product::paginate(2))
+                ->with('products', Product::paginate(12))
                 ->with('keyword', $keyword);
         }
     }
     public function categories()
     {
         $categories = Category::all();
-        $products = Product::orderBy('created_at','DESC')->paginate(3);
+        $products = Product::orderBy('created_at','DESC')->paginate(12);
 
         return view('frontend.category')
             ->with('categories', $categories)
@@ -107,7 +108,7 @@ class FrontendController extends Controller
         $products = collect();
 
         if ($selectedCategory) {
-            $products = Product::where('category_id', $id)->paginate(3);
+            $products = Product::where('category_id', $id)->paginate(12);
         }
 
         return view('frontend.category')

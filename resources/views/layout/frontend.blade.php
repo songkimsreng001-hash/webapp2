@@ -332,6 +332,24 @@
             color: var(--green-base);
         }
 
+        .btn-nav-logout {
+            border: 1.5px solid #ef4444;
+            border-radius: 9px;
+            padding: 6px 14px;
+            font-size: .84rem;
+            font-weight: 600;
+            color: #ef4444;
+            text-decoration: none;
+            background: transparent;
+            transition: all .18s;
+        }
+
+        .btn-nav-logout:hover {
+            background: #ef4444;
+            color: #fff;
+            border-color: #dc2626;
+        }
+
         .btn-nav-dash {
             background: var(--green-base);
             color: #fff !important;
@@ -705,7 +723,7 @@
         <div class="container">
 
             <!-- BRAND -->
-            <a class="navbar-brand-custom" href="{{ url('list') }}">
+            <a class="navbar-brand-custom" href="{{ url('/') }}">
                 <div class="brand-icon">
                     <i class="fas fa-store"></i>
                 </div>
@@ -815,10 +833,15 @@
                         @endif
                     </a>
 
-                    <!-- LOGIN -->
+                    <!-- LOGIN / LOGOUT -->
                     @guest
                         <a href="{{ route('login') }}" class="btn-nav-login">
                             Login
+                        </a>
+                    @else
+                        <a href="{{ route('logout') }}" class="btn-nav-logout">
+                            <i class="bi bi-box-arrow-right me-1"></i>
+                            Logout
                         </a>
                     @endguest
 
