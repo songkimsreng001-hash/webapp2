@@ -776,7 +776,7 @@
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{{ url('/list?category=drink') }}">
-                                    <i class="fas fa-glass-water me-2 text-info"></i> Drinks
+                                    <i class="fas fa-mug-hot me-2 text-info"></i> Drinks
                                 </a>
                             </li>
                             <li>
@@ -797,6 +797,26 @@
                             <li>
                                 <a class="dropdown-item" href="{{ url('/list?category=ice-cream') }}">
                                     <i class="fas fa-ice-cream me-2 text-danger"></i> Ice Cream
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url('/list?category=snacks') }}">
+                                    <i class="fas fa-cookie me-2 text-danger"></i> Snacks
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url('/list?category=fast-food') }}">
+                                    <i class="fas fa-hamburger me-2 text-danger"></i> Fast Food
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url('/list?category=beverage') }}">
+                                    <i class="fas fa-glass-water me-2 text-danger"></i> Beverage
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url('/list?category=milk') }}">
+                                    <i class="fas fa-glass-whiskey me-2 text-danger"></i> Milk
                                 </a>
                             </li>
                         </ul>
